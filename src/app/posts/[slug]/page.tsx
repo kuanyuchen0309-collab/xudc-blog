@@ -9,7 +9,9 @@ interface Props {
 }
 
 export async function generateStaticParams() {
-  return getAllPosts().map((p) => ({ slug: p.slug }));
+  const posts = getAllPosts();
+  if (posts.length === 0) return [{ slug: "__placeholder__" }];
+  return posts.map((p) => ({ slug: p.slug }));
 }
 
 export async function generateMetadata({ params }: Props) {

@@ -7,7 +7,9 @@ interface Props {
 }
 
 export async function generateStaticParams() {
-  return getAllSubjects().map((s) => ({ subject: s.name }));
+  const subjects = getAllSubjects();
+  if (subjects.length === 0) return [{ subject: "__placeholder__" }];
+  return subjects.map((s) => ({ subject: s.name }));
 }
 
 export async function generateMetadata({ params }: Props) {

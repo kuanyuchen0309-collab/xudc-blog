@@ -15,6 +15,7 @@ export async function generateStaticParams() {
       params.push({ subject: s.name, slug: note.slug });
     }
   }
+  if (params.length === 0) return [{ subject: "__placeholder__", slug: "__placeholder__" }];
   return params;
 }
 
