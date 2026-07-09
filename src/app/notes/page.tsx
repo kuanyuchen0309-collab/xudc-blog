@@ -1,3 +1,4 @@
+// force rebuild
 import Link from "next/link";
 import { getAllSubjects, buildSearchIndex } from "@/lib/notes";
 import { NoteSearch } from "@/components/note-search";
