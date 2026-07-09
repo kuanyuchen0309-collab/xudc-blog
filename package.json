@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "node scripts/generate-notes-data.mjs && next dev",
     "build": "node scripts/generate-notes-data.mjs && next build",
+    "postbuild": "opennextjs-cloudflare build --skipBuild",
     "start": "next start",
     "lint": "eslint",
     "preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
