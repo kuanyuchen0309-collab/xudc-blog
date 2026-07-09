@@ -19,15 +19,22 @@ function getNotes(subject) {
   return files.map((file) => {
     const slug = file.replace(/\.md$/, "");
     const raw = fs.readFileSync(path.join(dir, file), "utf-8");
-    const { data, content } = matter(raw);
-    return {
-      slug,
-      title: data.title ?? slug,
-      subject: data.subject ?? subject,
-      order: data.order ?? 0,
-      updated: data.updated ?? "",
-      content,
-    };
+    try {
+      const { data, content } = matter(raw);
+      const updated = data.updated instanceof Date
+        ? data.updated.toISOString().slice(0, 10)
+        : (data.updated ?? "");
+      return {
+        slug,
+        title: data.title ?? slug,
+        subject,
+        order: data.order ?? 0,
+        updated,
+        content,
+      };
+    } catch (err) {
+      throw new Error(`解析 ${path.join(dir, file)} 的 frontmatter 失败: ${err.message}`);
+    }
   }).sort((a, b) => a.order - b.order);
 }
 

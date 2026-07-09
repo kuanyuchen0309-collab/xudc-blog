@@ -23,7 +23,10 @@ interface SubjectData {
   notes: (NoteMeta & { content: string })[];
 }
 
-const subjects = notesData as SubjectData[];
+if (!Array.isArray(notesData)) {
+  throw new Error("notes-data.json 格式错误：期望数组");
+}
+const subjects: SubjectData[] = notesData;
 
 export function getAllSubjects(): Subject[] {
   return subjects.map((s) => ({ name: s.name, count: s.count }));
@@ -32,6 +35,7 @@ export function getAllSubjects(): Subject[] {
 export function getNotesBySubject(subject: string): NoteMeta[] {
   const found = subjects.find((s) => s.name === subject);
   if (!found) return [];
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   return found.notes.map(({ content, ...meta }) => meta);
 }
 
@@ -44,11 +48,12 @@ export function getNoteBySlug(
   const idx = found.notes.findIndex((n) => n.slug === slug);
   if (idx === -1) return null;
   const strip = (n: NoteMeta & { content: string }): NoteMeta => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { content, ...meta } = n;
     return meta;
   };
   return {
-    note: found.notes[idx],
+    note: { ...found.notes[idx] },
     prev: idx > 0 ? strip(found.notes[idx - 1]) : null,
     next: idx < found.notes.length - 1 ? strip(found.notes[idx + 1]) : null,
   };
