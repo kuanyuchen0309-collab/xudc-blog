@@ -38,6 +38,10 @@ function findSubject(id: string): SubjectData | undefined {
   return subjects.find((s) => s.slug === id) ?? subjects.find((s) => s.name === id);
 }
 
+export function getSubjectSlug(id: string): string | undefined {
+  return findSubject(id)?.slug;
+}
+
 export function getNotesBySubject(id: string): NoteMeta[] {
   const found = findSubject(id);
   if (!found) return [];
@@ -51,7 +55,8 @@ export function getNoteBySlug(
 ): { note: Note; prev: NoteMeta | null; next: NoteMeta | null } | null {
   const found = findSubject(subjectId);
   if (!found) return null;
-  const idx = found.notes.findIndex((n) => n.slug === slug);
+  const decoded = decodeURIComponent(slug);
+  const idx = found.notes.findIndex((n) => decodeURIComponent(n.slug) === decoded);
   if (idx === -1) return null;
   const strip = (n: NoteMeta & { content: string }): NoteMeta => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars

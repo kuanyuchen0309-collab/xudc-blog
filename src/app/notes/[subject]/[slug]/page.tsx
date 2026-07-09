@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { getAllSubjects, getNotesBySubject, getNoteBySlug } from "@/lib/notes";
+import { getAllSubjects, getNotesBySubject, getNoteBySlug, getSubjectSlug } from "@/lib/notes";
 import { Markdown } from "@/components/markdown";
 import { NoteNav } from "@/components/note-nav";
 
@@ -34,11 +34,12 @@ export default async function NoteDetailPage({ params }: Props) {
 
   const { note, prev, next } = result;
   const displayName = decodeURIComponent(subject);
+  const subjectSlug = getSubjectSlug(subject) ?? subject;
 
   return (
     <div className="max-w-2xl mx-auto px-5 py-8">
       <Link
-        href={`/notes/${subject}`}
+        href={`/notes/${subjectSlug}`}
         className="text-sm text-gray-400 hover:text-gray-600 transition-colors no-underline"
       >
         ← {displayName}
@@ -56,7 +57,7 @@ export default async function NoteDetailPage({ params }: Props) {
 
         <Markdown content={note.content} />
 
-        <NoteNav prev={prev} next={next} subject={subject} />
+        <NoteNav prev={prev} next={next} subject={subjectSlug} />
       </article>
     </div>
   );

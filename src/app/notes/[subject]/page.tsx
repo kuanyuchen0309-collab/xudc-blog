@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { getAllSubjects, getNotesBySubject } from "@/lib/notes";
+import { getAllSubjects, getNotesBySubject, getSubjectSlug } from "@/lib/notes";
 
 interface Props {
   params: Promise<{ subject: string }>;
@@ -22,6 +22,7 @@ export default async function SubjectPage({ params }: Props) {
   const { subject } = await params;
   const notes = getNotesBySubject(subject);
   const displayName = decodeURIComponent(subject);
+  const subjectSlug = getSubjectSlug(subject) ?? subject;
   if (notes.length === 0) notFound();
 
   return (
@@ -41,7 +42,7 @@ export default async function SubjectPage({ params }: Props) {
         {notes.map((note) => (
           <Link
             key={note.slug}
-            href={`/notes/${subject}/${note.slug}`}
+            href={`/notes/${subjectSlug}/${note.slug}`}
             className="block bg-white rounded-lg shadow-sm px-6 py-4 no-underline hover:shadow-md transition-shadow"
           >
             <span className="text-gray-500 text-sm mr-3">

@@ -17,7 +17,7 @@ function getNotes(subject) {
   if (!fs.existsSync(dir)) return [];
   const files = fs.readdirSync(dir).filter((f) => f.endsWith(".md"));
   return files.map((file) => {
-    const slug = file.replace(/\.md$/, "");
+    const slug = encodeURIComponent(file.replace(/\.md$/, ""));
     const raw = fs.readFileSync(path.join(dir, file), "utf-8");
     try {
       const { data, content } = matter(raw);
