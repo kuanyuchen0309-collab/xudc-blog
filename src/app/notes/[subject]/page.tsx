@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { getAllSubjects, getNotesBySubject, getSubjectSlug } from "@/lib/notes";
+import { getAllSubjects, getNotesBySubject, encodeUrl } from "@/lib/notes";
 
 interface Props {
   params: Promise<{ subject: string }>;
@@ -9,20 +9,19 @@ interface Props {
 export async function generateStaticParams() {
   const subjects = getAllSubjects();
   if (subjects.length === 0) return [{ subject: "__placeholder__" }];
-  return subjects.map((s) => ({ subject: s.slug }));
+  return subjects.map((s) => ({ subject: encodeUrl(s.name) }));
 }
 
 export async function generateMetadata({ params }: Props) {
   const { subject } = await params;
-  const displayName = decodeURIComponent(subject);
-  return { title: displayName };
+  const name = decodeURIComponent(subject);
+  return { title: name };
 }
 
 export default async function SubjectPage({ params }: Props) {
   const { subject } = await params;
-  const notes = getNotesBySubject(subject);
-  const displayName = decodeURIComponent(subject);
-  const subjectSlug = getSubjectSlug(subject) ?? subject;
+  const name = decodeURIComponent(subject);
+  const notes = getNotesBySubject(name);
   if (notes.length === 0) notFound();
 
   return (
@@ -35,14 +34,14 @@ export default async function SubjectPage({ params }: Props) {
       </Link>
 
       <h1 className="text-2xl font-serif font-bold text-gray-900 mt-6 mb-6">
-        {displayName}
+        {name}
       </h1>
 
       <div className="space-y-2">
         {notes.map((note) => (
           <Link
             key={note.slug}
-            href={`/notes/${subjectSlug}/${note.slug}`}
+            href={`/notes/${encodeUrl(name)}/${encodeUrl(note.slug)}`}
             className="block bg-white rounded-lg shadow-sm px-6 py-4 no-underline hover:shadow-md transition-shadow"
           >
             <span className="text-gray-500 text-sm mr-3">

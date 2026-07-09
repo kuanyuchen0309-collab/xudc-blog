@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import type { SearchIndexItem } from "@/lib/notes";
+import { encodeUrl } from "@/lib/notes";
 
 export function NoteSearch({ index }: { index: SearchIndexItem[] }) {
   const [query, setQuery] = useState("");
@@ -38,7 +39,7 @@ export function NoteSearch({ index }: { index: SearchIndexItem[] }) {
           {results.map((item) => (
             <li key={`${item.subject}/${item.slug}`}>
               <Link
-                href={`/notes/${item.subjectSlug}/${item.slug}`}
+                href={`/notes/${encodeUrl(item.subject)}/${encodeUrl(item.slug)}`}
                 className="block px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 no-underline"
                 onClick={() => {
                   setQuery("");

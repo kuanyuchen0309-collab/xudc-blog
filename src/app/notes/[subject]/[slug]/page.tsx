@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { getAllSubjects, getNotesBySubject, getNoteBySlug, getSubjectSlug } from "@/lib/notes";
+import { getAllSubjects, getNotesBySubject, getNoteBySlug, encodeUrl } from "@/lib/notes";
 import { Markdown } from "@/components/markdown";
 import { NoteNav } from "@/components/note-nav";
 
@@ -11,8 +11,8 @@ interface Props {
 export async function generateStaticParams() {
   const params: { subject: string; slug: string }[] = [];
   for (const s of getAllSubjects()) {
-    for (const note of getNotesBySubject(s.slug)) {
-      params.push({ subject: s.slug, slug: note.slug });
+    for (const note of getNotesBySubject(s.name)) {
+      params.push({ subject: encodeUrl(s.name), slug: encodeUrl(note.slug) });
     }
   }
   if (params.length === 0) return [{ subject: "__placeholder__", slug: "__placeholder__" }];
@@ -21,28 +21,27 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: Props) {
   const { subject, slug } = await params;
-  const result = getNoteBySlug(subject, slug);
-  const displayName = decodeURIComponent(subject);
+  const name = decodeURIComponent(subject);
+  const result = getNoteBySlug(name, decodeURIComponent(slug));
   if (!result) return { title: "未找到" };
-  return { title: `${result.note.title} — ${displayName}` };
+  return { title: `${result.note.title} — ${name}` };
 }
 
 export default async function NoteDetailPage({ params }: Props) {
   const { subject, slug } = await params;
-  const result = getNoteBySlug(subject, slug);
+  const name = decodeURIComponent(subject);
+  const result = getNoteBySlug(name, decodeURIComponent(slug));
   if (!result) notFound();
 
   const { note, prev, next } = result;
-  const displayName = decodeURIComponent(subject);
-  const subjectSlug = getSubjectSlug(subject) ?? subject;
 
   return (
     <div className="max-w-2xl mx-auto px-5 py-8">
       <Link
-        href={`/notes/${subjectSlug}`}
+        href={`/notes/${encodeUrl(name)}`}
         className="text-sm text-gray-400 hover:text-gray-600 transition-colors no-underline"
       >
-        ← {displayName}
+        ← {name}
       </Link>
 
       <article className="mt-6 bg-white rounded-lg shadow-sm px-5 sm:px-10 py-10">
@@ -57,7 +56,7 @@ export default async function NoteDetailPage({ params }: Props) {
 
         <Markdown content={note.content} />
 
-        <NoteNav prev={prev} next={next} subject={subjectSlug} />
+        <NoteNav prev={prev} next={next} subject={name} />
       </article>
     </div>
   );
