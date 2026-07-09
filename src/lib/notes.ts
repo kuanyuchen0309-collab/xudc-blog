@@ -14,13 +14,11 @@ export interface Note extends NoteMeta {
 
 export interface Subject {
   name: string;
-  slug: string;
   count: number;
 }
 
 interface SubjectData {
   name: string;
-  slug: string;
   count: number;
   notes: (NoteMeta & { content: string })[];
 }
@@ -30,33 +28,28 @@ if (!Array.isArray(notesData)) {
 }
 const subjects: SubjectData[] = notesData;
 
+export function encodeUrl(s: string): string {
+  return encodeURIComponent(s);
+}
+
 export function getAllSubjects(): Subject[] {
-  return subjects.map((s) => ({ name: s.name, slug: s.slug, count: s.count }));
+  return subjects.map((s) => ({ name: s.name, count: s.count }));
 }
 
-function findSubject(id: string): SubjectData | undefined {
-  return subjects.find((s) => s.slug === id) ?? subjects.find((s) => s.name === id);
-}
-
-export function getSubjectSlug(id: string): string | undefined {
-  return findSubject(id)?.slug;
-}
-
-export function getNotesBySubject(id: string): NoteMeta[] {
-  const found = findSubject(id);
+export function getNotesBySubject(name: string): NoteMeta[] {
+  const found = subjects.find((s) => s.name === name);
   if (!found) return [];
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   return found.notes.map(({ content, ...meta }) => meta);
 }
 
 export function getNoteBySlug(
-  subjectId: string,
+  subject: string,
   slug: string
 ): { note: Note; prev: NoteMeta | null; next: NoteMeta | null } | null {
-  const found = findSubject(subjectId);
+  const found = subjects.find((s) => s.name === subject);
   if (!found) return null;
-  const decoded = decodeURIComponent(slug);
-  const idx = found.notes.findIndex((n) => decodeURIComponent(n.slug) === decoded);
+  const idx = found.notes.findIndex((n) => n.slug === slug);
   if (idx === -1) return null;
   const strip = (n: NoteMeta & { content: string }): NoteMeta => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -74,7 +67,6 @@ export interface SearchIndexItem {
   slug: string;
   title: string;
   subject: string;
-  subjectSlug: string;
   content: string;
 }
 
@@ -86,7 +78,6 @@ export function buildSearchIndex(): SearchIndexItem[] {
         slug: note.slug,
         title: note.title,
         subject: note.subject,
-        subjectSlug: subj.slug,
         content: note.content.slice(0, 1000),
       });
     }

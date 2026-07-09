@@ -17,20 +17,19 @@ function getNotes(subject) {
   if (!fs.existsSync(dir)) return [];
   const files = fs.readdirSync(dir).filter((f) => f.endsWith(".md"));
   return files.map((file) => {
-    const rawSlug = file.replace(/\.md$/, "");
-    const slug = encodeURIComponent(rawSlug);
+    const slug = file.replace(/\.md$/, "");
     const raw = fs.readFileSync(path.join(dir, file), "utf-8");
     try {
       const { data, content } = matter(raw);
       if (!data.title) {
-        console.warn(`⚠ ${subject}/${file} 缺少 title，将用文件名 "${rawSlug}" 作为标题`);
+        console.warn(`⚠ ${subject}/${file} 缺少 title，将用文件名 "${slug}" 作为标题`);
       }
       const updated = data.updated instanceof Date
         ? data.updated.toISOString().slice(0, 10)
         : (data.updated ?? "");
       return {
         slug,
-        title: data.title ?? rawSlug,
+        title: data.title ?? slug,
         subject,
         order: data.order ?? 0,
         updated,
@@ -44,7 +43,7 @@ function getNotes(subject) {
 
 const subjects = getSubjectNames().map((name) => {
   const notes = getNotes(name);
-  return { name, slug: encodeURIComponent(name), count: notes.length, notes };
+  return { name, count: notes.length, notes };
 }).sort((a, b) => a.name.localeCompare(b.name, "zh"));
 
 fs.mkdirSync(path.dirname(outFile), { recursive: true });
