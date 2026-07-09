@@ -18,7 +18,7 @@ export default function NotesIndexPage() {
       </Link>
 
       <h1 className="text-2xl font-serif font-bold text-gray-900 mt-6 mb-4">
-        三副学习笔记
+        三副
       </h1>
 
       <NoteSearch index={searchIndex} />
