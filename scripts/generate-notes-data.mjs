@@ -22,6 +22,9 @@ function getNotes(subject) {
     const raw = fs.readFileSync(path.join(dir, file), "utf-8");
     try {
       const { data, content } = matter(raw);
+      if (!data.title) {
+        console.warn(`⚠ ${subject}/${file} 缺少 title，将用文件名 "${rawSlug}" 作为标题`);
+      }
       const updated = data.updated instanceof Date
         ? data.updated.toISOString().slice(0, 10)
         : (data.updated ?? "");
