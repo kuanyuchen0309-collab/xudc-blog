@@ -9,17 +9,19 @@ interface Props {
 export async function generateStaticParams() {
   const subjects = getAllSubjects();
   if (subjects.length === 0) return [{ subject: "__placeholder__" }];
-  return subjects.map((s) => ({ subject: s.name }));
+  return subjects.map((s) => ({ subject: s.slug }));
 }
 
 export async function generateMetadata({ params }: Props) {
   const { subject } = await params;
-  return { title: subject };
+  const displayName = decodeURIComponent(subject);
+  return { title: displayName };
 }
 
 export default async function SubjectPage({ params }: Props) {
   const { subject } = await params;
   const notes = getNotesBySubject(subject);
+  const displayName = decodeURIComponent(subject);
   if (notes.length === 0) notFound();
 
   return (
@@ -32,7 +34,7 @@ export default async function SubjectPage({ params }: Props) {
       </Link>
 
       <h1 className="text-2xl font-serif font-bold text-gray-900 mt-6 mb-6">
-        {subject}
+        {displayName}
       </h1>
 
       <div className="space-y-2">

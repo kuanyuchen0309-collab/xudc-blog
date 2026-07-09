@@ -30,7 +30,7 @@ export default function NotesIndexPage() {
           subjects.map((s) => (
             <Link
               key={s.name}
-              href={`/notes/${s.name}`}
+              href={`/notes/${s.slug}`}
               className="block bg-white rounded-lg shadow-sm px-6 py-4 no-underline hover:shadow-md transition-shadow"
             >
               <span className="text-gray-800 font-medium">{s.name}</span>

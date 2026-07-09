@@ -11,8 +11,8 @@ interface Props {
 export async function generateStaticParams() {
   const params: { subject: string; slug: string }[] = [];
   for (const s of getAllSubjects()) {
-    for (const note of getNotesBySubject(s.name)) {
-      params.push({ subject: s.name, slug: note.slug });
+    for (const note of getNotesBySubject(s.slug)) {
+      params.push({ subject: s.slug, slug: note.slug });
     }
   }
   if (params.length === 0) return [{ subject: "__placeholder__", slug: "__placeholder__" }];
@@ -22,8 +22,9 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: Props) {
   const { subject, slug } = await params;
   const result = getNoteBySlug(subject, slug);
+  const displayName = decodeURIComponent(subject);
   if (!result) return { title: "未找到" };
-  return { title: `${result.note.title} — ${subject}` };
+  return { title: `${result.note.title} — ${displayName}` };
 }
 
 export default async function NoteDetailPage({ params }: Props) {
@@ -32,6 +33,7 @@ export default async function NoteDetailPage({ params }: Props) {
   if (!result) notFound();
 
   const { note, prev, next } = result;
+  const displayName = decodeURIComponent(subject);
 
   return (
     <div className="max-w-2xl mx-auto px-5 py-8">
@@ -39,7 +41,7 @@ export default async function NoteDetailPage({ params }: Props) {
         href={`/notes/${subject}`}
         className="text-sm text-gray-400 hover:text-gray-600 transition-colors no-underline"
       >
-        ← {subject}
+        ← {displayName}
       </Link>
 
       <article className="mt-6 bg-white rounded-lg shadow-sm px-5 sm:px-10 py-10">

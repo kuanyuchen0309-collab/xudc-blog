@@ -40,7 +40,7 @@ function getNotes(subject) {
 
 const subjects = getSubjectNames().map((name) => {
   const notes = getNotes(name);
-  return { name, count: notes.length, notes };
+  return { name, slug: encodeURIComponent(name), count: notes.length, notes };
 }).sort((a, b) => a.name.localeCompare(b.name, "zh"));
 
 fs.mkdirSync(path.dirname(outFile), { recursive: true });

@@ -38,7 +38,7 @@ export function NoteSearch({ index }: { index: SearchIndexItem[] }) {
           {results.map((item) => (
             <li key={`${item.subject}/${item.slug}`}>
               <Link
-                href={`/notes/${item.subject}/${item.slug}`}
+                href={`/notes/${item.subjectSlug}/${item.slug}`}
                 className="block px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 no-underline"
                 onClick={() => {
                   setQuery("");
