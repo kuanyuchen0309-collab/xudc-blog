@@ -36,17 +36,17 @@ export default async function NoteDetailPage({ params }: Props) {
   const { note, prev, next } = result;
 
   return (
-    <div className="max-w-2xl mx-auto px-5 py-8">
+    <div className="max-w-3xl mx-auto px-6 py-10">
       <Link
         href={`/notes/${encodeUrl(name)}`}
-        className="text-sm text-gray-400 hover:text-gray-600 transition-colors no-underline"
+        className="text-sm text-gray-400 hover:text-black transition-colors no-underline"
       >
         ← {name}
       </Link>
 
-      <article className="mt-6 bg-white rounded-lg shadow-sm px-5 sm:px-10 py-10">
+      <article className="mt-6 bg-white border border-gray-200 px-5 sm:px-10 py-10">
         <header className="mb-10 pb-5 border-b border-gray-100">
-          <h1 className="text-2xl font-serif font-bold text-gray-900 m-0 leading-snug">
+          <h1 className="text-2xl font-serif font-bold text-black m-0 leading-snug">
             {note.title}
           </h1>
           <p className="text-sm text-gray-400 mt-3 m-0">

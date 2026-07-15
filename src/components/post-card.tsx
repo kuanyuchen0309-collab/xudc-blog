@@ -9,7 +9,7 @@ export function PostCard({ post }: { post: PostMeta }) {
       <h2 className="mt-1 mb-2">
         <Link
           href={`/posts/${post.slug}`}
-          className="text-xl font-serif font-bold text-gray-900 no-underline hover:text-gray-600 transition-colors"
+          className="text-xl font-serif font-bold text-black no-underline hover:text-[#1a3a5c] transition-colors"
         >
           {post.title}
         </Link>

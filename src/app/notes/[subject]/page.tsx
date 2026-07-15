@@ -25,30 +25,32 @@ export default async function SubjectPage({ params }: Props) {
   if (notes.length === 0) notFound();
 
   return (
-    <div className="max-w-2xl mx-auto px-5 py-8">
+    <div className="max-w-3xl lg:max-w-4xl mx-auto px-6 py-10">
       <Link
         href="/notes"
-        className="text-sm text-gray-400 hover:text-gray-600 transition-colors no-underline"
+        className="text-sm text-gray-400 hover:text-black transition-colors no-underline"
       >
         ← 笔记目录
       </Link>
 
-      <h1 className="text-2xl font-serif font-bold text-gray-900 mt-6 mb-6">
+      <h1 className="text-2xl font-serif font-bold text-black mt-6 mb-6">
         {name}
       </h1>
 
-      <div className="space-y-2">
+      <div className="border-t border-gray-200">
         {notes.map((note) => (
           <Link
             key={note.slug}
             href={`/notes/${encodeUrl(name)}/${encodeUrl(note.slug)}`}
-            className="block bg-white rounded-lg shadow-sm px-6 py-4 no-underline hover:shadow-md transition-shadow"
+            className="flex items-center justify-between py-4 border-b border-gray-200 no-underline hover:bg-gray-50 transition-colors px-2 -mx-2"
           >
-            <span className="text-gray-500 text-sm mr-3">
-              {String(note.order).padStart(2, "0")}
+            <span>
+              <span className="text-gray-400 text-sm mr-3">
+                {String(note.order).padStart(2, "0")}
+              </span>
+              <span className="text-black">{note.title}</span>
             </span>
-            <span className="text-gray-800">{note.title}</span>
-            <span className="text-gray-400 text-sm float-right">
+            <span className="text-gray-400 text-sm shrink-0 ml-4">
               {note.updated}
             </span>
           </Link>

@@ -16,7 +16,7 @@ export function NoteNav({
       {prev ? (
         <Link
           href={`/notes/${encodeUrl(subject)}/${encodeUrl(prev.slug)}`}
-          className="text-gray-500 hover:text-gray-900 transition-colors no-underline"
+          className="text-gray-500 hover:text-black transition-colors no-underline"
         >
           ← {prev.title}
         </Link>
@@ -26,7 +26,7 @@ export function NoteNav({
       {next ? (
         <Link
           href={`/notes/${encodeUrl(subject)}/${encodeUrl(next.slug)}`}
-          className="text-gray-500 hover:text-gray-900 transition-colors no-underline"
+          className="text-gray-500 hover:text-black transition-colors no-underline"
         >
           {next.title} →
         </Link>
